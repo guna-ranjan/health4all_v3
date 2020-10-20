@@ -97,7 +97,7 @@ $(document).ready(function(){$("#from_date").datepicker({
 		<td><?php echo $s->keyword;?></td>
 		<td><?php echo $s->topic;?></td>
 		<td style="text-align:center;">
-		    <?php if(isset($s->document_link)) {echo "<a href=" . base_url() . "assets/user_documents/" . $s->document_link . 
+		    <?php if(isset($s->document_link) && $s->document_link!="") {echo "<a href=" . base_url() . "assets/user_documents/" . $s->document_link . 
 			" target=\"_blank\"><i class=\"fa fa-file\" style=\"font-size:24px;color:rgb(236, 121, 121)\"></i></a>";}
 			  else {echo "NA";}?>
 		</td>
