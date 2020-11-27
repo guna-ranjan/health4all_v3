@@ -76,9 +76,14 @@ $(document).ready(function(){$("#from_date").datepicker({
         });
 </script>
 <div class="row">
-		<h4>Documentation</h4>	
 
-<?php if(isset($report) && count($report)>0){ ?>
+<?php if(isset($report)) { ?>
+
+	<h3 class="col-md-12">List of Documents 
+	<?php if($add_access==1){ ?>
+	<a href="<?php echo base_url()."documentation/add_document";?>" class="btn btn-primary">Add</a>
+	<?php } ?></h3>
+
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 		<th>SNo</th>
@@ -86,6 +91,11 @@ $(document).ready(function(){$("#from_date").datepicker({
 		<th>Topic</th>
 		<th>Document</th>
 		<th>Document Date</th>
+		<?php if($edit_access==1){ ?>
+		    <th>Added by</th>
+			<th>Edited by</th>		
+	    	<th>Edit</th>
+		<?php } ?>		
 	</thead>
 	<tbody>
 	<?php 
@@ -97,16 +107,36 @@ $(document).ready(function(){$("#from_date").datepicker({
 		<td><?php echo $s->keyword;?></td>
 		<td><?php echo $s->topic;?></td>
 		<td style="text-align:center;">
-		    <?php if(isset($s->document_link) && $s->document_link!="") {echo "<a href=" . base_url() . "assets/user_documents/" . $s->document_link . 
+			<?php 
+			// Display document icon with document hyper link only if document link is available in DB
+			if(isset($s->document_link) && $s->document_link!="") {echo "<a href=" . base_url() . "documentation/display_document/" . $s->document_link . 
 			" target=\"_blank\"><i class=\"fa fa-file\" style=\"font-size:24px;color:rgb(236, 121, 121)\"></i></a>";}
-			  else {echo "";}?>
+			  else {echo "";}
+			?>
 		</td>
 		<td><?php echo date("j M Y", strtotime("$s->document_date"));?></td>
+		<?php if($edit_access==1){ ?>		
+			<td><?php echo $s->creator . ", "; 
+				if(isset($s->insert_datetime) && $s->insert_datetime!="" 
+				   && strtotime($s->insert_datetime)!=strtotime('0000-00-00 00:00:00')) 
+				{echo date("j M Y", strtotime("$s->insert_datetime")).", ".date("h:i A.", strtotime("$s->insert_datetime"));} 
+				else {echo $s->insert_datetime="";}?>
+			</td>
+			<td><?php echo $s->modifier . ", "; 
+				if(isset($s->update_datetime) && $s->update_datetime!=""
+				&& strtotime($s->update_datetime)!=strtotime('0000-00-00 00:00:00')) 
+				{echo date("j M Y", strtotime("$s->update_datetime")).", ".date("h:i A.", strtotime("$s->update_datetime"));} 
+				else {echo $s->update_datetime="";}?>
+			</td>			
+	    	<td>
+	            <a href="<?php echo base_url()."documentation/edit_document/".$s->id;?>" class="btn btn-primary">Edit</a>
+	    	</td>
+		<?php } ?>		
 	</tr>
 	<?php $sno++;}	?>
 	</tbody>
 	</table>	
 	<?php } else { ?>
-	No documents available.
+	     No documents available.
 <?php } ?>
 </div>	
